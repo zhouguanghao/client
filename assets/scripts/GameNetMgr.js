@@ -35,7 +35,6 @@ cc.Class({
         this.dingque = -1;
         this.button = -1;
         this.gamestate = "";
-        this.dingque = -1;
         this.isDingQueing = false;
         this.isHuanSanZhang = false;
         this.curaction = null;
@@ -620,30 +619,53 @@ cc.Class({
         this.turn = si;
         this.dispatchEvent('game_chupai',data);
     },
+
+    enterGameRoom: function(data) {
+        this.roomId = data.room.roomid;
+        this.conf = data.conf;
+        this.maxNumOfGames = data.conf.maxGames;
+        this.numOfGames = data.numofgames;
+        this.seats = data.seats;
+        this.seatIndex = this.getSeatIndexByID(cc.vv.userMgr.userId);
+        this.isOver = false;
+        cc.director.loadScene("mjgame");
+    },
     
     connectGameServer:function(data){
-        this.dissoveData = null;
-        cc.vv.net.ip = data.ip + ":" + data.port;
-        console.log(cc.vv.net.ip);
-        var self = this;
-
-        var onConnectOK = function(){
-            console.log("onConnectOK");
-            var sd = {
-                token:data.token,
-                roomid:data.roomid,
-                time:data.time,
-                sign:data.sign,
-            };
-            cc.vv.net.send("login",sd);
+        var data = {
+            flag: 1,
+            id:cc.vv.userMgr.account,
+            roomid:data.room.roomid
         };
-        
-        var onConnectFailed = function(){
-            console.log("failed.");
-            cc.vv.wc.hide();
-        };
+        console.log(data);
         cc.vv.wc.show("正在进入房间");
-        cc.vv.net.connect(onConnectOK,onConnectFailed);
+        cc.vv.net.sendMessage("EnterRoomReq", data);
+
+
+
+
+        // this.dissoveData = null;
+        // cc.vv.net.ip = data.ip + ":" + data.port;
+        // console.log(cc.vv.net.ip);
+        // var self = this;
+
+        // var onConnectOK = function(){
+        //     console.log("onConnectOK");
+        //     var sd = {
+        //         token:data.token,
+        //         roomid:data.roomid,
+        //         time:data.time,
+        //         sign:data.sign,
+        //     };
+        //     cc.vv.net.send("login",sd);
+        // };
+        
+        // var onConnectFailed = function(){
+        //     console.log("failed.");
+        //     cc.vv.wc.hide();
+        // };
+        // cc.vv.wc.show("正在进入房间");
+        // cc.vv.net.connect(onConnectOK,onConnectFailed);
     }
 
     // called every frame, uncomment this function to activate update callback

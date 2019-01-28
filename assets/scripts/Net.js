@@ -10,6 +10,10 @@ cc.ProtocolId = cc.Enum({
     LoginReq:4,
     LoginRes:5,
     NoticeMsg:6,
+    CreateRoomReq:7,
+    CreateRoomRes:8,
+    EnterRoomReq:9,
+    EnterRoomRes:10,
 });
 cc.Class({
     extends: cc.Component,

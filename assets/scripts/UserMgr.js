@@ -56,11 +56,11 @@ cc.Class({
             passwd: this.account,
         };
         cc.vv.net.sendMessage("LoginReq", data);
+        // cc.vv.http.sendRequest("/login",{account:this.account,sign:this.sign},onLogin);
     },
 
     onLogin:function(ret) {
         if (ret.status == 0) {
-            cc.log(ret)
             this.account = ret.attr.id;
             this.userId = ret.attr.id;
             this.userName = ret.attr.nick;
@@ -68,7 +68,7 @@ cc.Class({
             // this.exp = ret.attr.exp;
             // this.coins = ret.attr.coins;
             this.gems = ret.attr.gold;
-            this.roomData = ret.attr.roomid;
+            // this.roomData = ret.attr.roomid;
             this.sex = ret.attr.sex;
             // this.ip = ret.attr.ip;
             cc.log(this.account, this.userId, this.userName, this.lv, this.gems, this.sex);
