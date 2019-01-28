@@ -124,6 +124,12 @@ cc.Class({
                         this.handlerNoticeTip(data);
                     }
                     break;
+                case cc.ProtocolId.CreateRoomRes:
+                    this.handlerCreateRoom(data)
+                    break;
+                case cc.ProtocolId.EnterRoomRes:
+                    this.handlerEnterRoom(data)
+                    break;
                 default:
                     break;
             }
@@ -162,13 +168,44 @@ cc.Class({
         cc.vv.userMgr.notice.msg = ret.msg;
         this.lblNotice.string = ret.msg;
     },
+
+    handlerCreateRoom: function(ret){
+        if(ret.status !== 0){
+            cc.vv.wc.hide();
+            if(ret.status == 2){
+                cc.vv.alert.show("提示","房卡不足，创建房间失败!");  
+            }
+            else{
+                cc.vv.alert.show("提示","创建房间失败,错误码:" + ret.status);
+            }
+        }
+        else{
+            cc.vv.gameNetMgr.connectGameServer(ret);
+            // cc.director.loadScene("mjgame");
+        }
+    },
+
+    handlerEnterRoom: function(ret){
+        if(ret.status !== 0){
+            cc.vv.wc.hide();
+            if(ret.status == 1){
+                cc.vv.alert.show("提示","房间不存在!");  
+            } else if (ret.status == 2) {
+                cc.vv.alert.show("提示","房间已满人!");  
+            }
+            else{
+                cc.vv.alert.show("提示","进入房间失败,错误码:" + ret.status);
+            }
+        }
+        else{
+            cc.vv.gameNetMgr.enterGameRoom(ret);
+        }
+    },
     
     initButtonHandler:function(btnPath){
         var btn = cc.find(btnPath);
         cc.vv.utils.addClickEvent(btn,this.node,"Hall","onBtnClicked");        
     },
-    
-    
     
     initLabels:function(){
         this.lblName.string = cc.vv.userMgr.userName;

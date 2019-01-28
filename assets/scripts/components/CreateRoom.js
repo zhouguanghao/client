@@ -102,22 +102,7 @@ cc.Class({
     
     createRoom:function(){
         var self = this;
-        var onCreate = function(ret){
-            if(ret.errcode !== 0){
-                cc.vv.wc.hide();
-                //console.log(ret.errmsg);
-                if(ret.errcode == 2222){
-                    cc.vv.alert.show("提示","房卡不足，创建房间失败!");  
-                }
-                else{
-                    cc.vv.alert.show("提示","创建房间失败,错误码:" + ret.errcode);
-                }
-            }
-            else{
-                cc.vv.gameNetMgr.connectGameServer(ret);
-            }
-        };
-        
+
         var difen = 0;
         for(var i = 0; i < self._difenxuanze.length; ++i){
             if(self._difenxuanze[i].checked){
@@ -180,7 +165,7 @@ cc.Class({
         }
         
         var conf = {
-            type:type,
+            game:type,
             difen:difen,
             zimo:zimo,
             jiangdui:jiangdui,
@@ -189,17 +174,18 @@ cc.Class({
             jushuxuanze:jushuxuanze,
             dianganghua:dianganghua,
             menqing:menqing,
-            tiandihu:tiandihu,   
+            tiandihu:tiandihu,
         }; 
         
         var data = {
-            account:cc.vv.userMgr.account,
-            sign:cc.vv.userMgr.sign,
-            conf:JSON.stringify(conf)
+            id:cc.vv.userMgr.account,
+            // sign:cc.vv.userMgr.sign,
+            rule:JSON.stringify(conf)
         };
         console.log(data);
         cc.vv.wc.show("正在创建房间");
-        cc.vv.http.sendRequest("/create_private_room",data,onCreate);   
+        cc.vv.net.sendMessage("CreateRoomReq", data);
+        // cc.vv.http.sendRequest("/create_private_room",data,onCreate);
     }
 
     // called every frame, uncomment this function to activate update callback
